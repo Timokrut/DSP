@@ -1,16 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-# -------------------------------
-# 1. Исходный сигнал
-# -------------------------------
-
 def f(x):
     return np.where(x < 0, x + 1, 1 - x/3)
-
-# -------------------------------
-# 2. Аналитические коэффициенты
-# -------------------------------
 
 def a_n(n):
     a = (np.pi * n) / 2
@@ -23,10 +15,6 @@ def b_n(n):
     a = (np.pi * n) / 2
     return 0.5 * ((np.sin(a) / (a**2)) - (np.sin(3*a) / (3 * a**2)))
 
-# -------------------------------
-# 3. Ряд Фурье c аналитическими коэффициентами
-# -------------------------------
-
 def fourier_analytic(x, N):
     s = a_n(0) / 2
     for n in range(1, N+1):
@@ -34,10 +22,6 @@ def fourier_analytic(x, N):
         b = b_n(n)
         s += a * np.cos(np.pi * n * x / 2) + b * np.sin(np.pi * n * x / 2)
     return s
-
-# -------------------------------
-# 4. Численные коэффициенты (интегралы)
-# -------------------------------
 
 def numeric_coeffs(N):
     X = np.linspace(-1, 3, 5000)
@@ -64,11 +48,7 @@ def fourier_numeric(x, a, b):
         s += a[n] * np.cos(np.pi * n * x / 2) + b[n] * np.sin(np.pi * n * x / 2)
     return s
 
-# -------------------------------
-# Plot
-# -------------------------------
-
-N = 50  # число гармоник
+N = 50  
 
 x = np.linspace(-1, 3, 2000)
 y = f(x)
@@ -79,10 +59,6 @@ y_an = fourier_analytic(x, N)
 # численный ряд
 a_num, b_num = numeric_coeffs(N)
 y_num = fourier_numeric(x, a_num, b_num)
-
-# -------------------------------
-# Графики
-# -------------------------------
 
 plt.figure(figsize=(12, 8))
 

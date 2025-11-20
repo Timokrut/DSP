@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.signal import spectrogram 
+from scipy.signal import spectrogram
 
 # -----------------------------
 # Параметры сигнала
@@ -178,12 +178,19 @@ plt.grid(True)
 nperseg = 20
 noverlap = nperseg // 2
 
-f_box, tt_box, Sxx_box = spectrogram(s, fs=fs, window='boxcar', nperseg=nperseg, noverlap=noverlap)
+f_box, tt_box, Sxx_box = spectrogram(s, fs=fs, window='boxcar', nperseg=nperseg, noverlap=noverlap, return_onesided=False)
 f_hann, tt_hann, Sxx_hann = spectrogram(s, fs=fs, window='hann', nperseg=nperseg, noverlap=noverlap)
+
+f_vis = np.fft.fftshift(f_box)
+f_vis = np.append(f_vis, fs/2)
+Sxx_box_padded = np.vstack([Sxx_box, Sxx_box[-1, :][None, :]])
+# f_vis = np.append(f_vis, fs/2)
+# if f_vis[-1] < (fs/2):
 
 plt.figure(figsize=(12,8))
 plt.subplot(2,1,1)
-plt.pcolormesh(tt_box, f_box, 10*np.log10(Sxx_box+1e-12), shading='gouraud')
+plt.pcolormesh(tt_box, f_vis, np.fft.fftshift(10*np.log10(Sxx_box_padded+1e-12), axes=0), shading='gouraud')
+print(f_box)
 plt.title('Спектрограмма (прямоугольное окно)')
 plt.xlabel('Время, с')
 plt.ylabel('Частота, Гц')
